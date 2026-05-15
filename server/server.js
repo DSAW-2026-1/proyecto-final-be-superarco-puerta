@@ -20,17 +20,21 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use(async (_req, res, next) => {
+app.get('/', (_req, res) => {
+  res.json({ message: 'Sabana Market API running' });
+});
+
+app.get('/api/health', (_req, res) => {
+  res.json({ message: 'Backend funcionando correctamente' });
+});
+
+app.use('/api', async (_req, res, next) => {
   try {
     await connectDB();
     next();
   } catch {
-    res.status(500).json({ message: 'Error de conexión' });
+    res.status(500).json({ message: 'Error de conexión con la base de datos' });
   }
-});
-
-app.get('/', (_req, res) => {
-  res.json({ message: 'Sabana Market API running' });
 });
 
 app.use('/api/auth', authRoutes);
